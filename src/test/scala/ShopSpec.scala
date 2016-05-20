@@ -15,11 +15,11 @@ class ShopSpec extends FlatSpec with Matchers {
     val shop = new Shop(openingDay, openingHours)
     val wednesday = "2016-05-11T12:22:11.824Z"
 
-    shop isOpen wednesday shouldBe true
+    shop isOpenOn wednesday shouldBe true
   }
 }
 
 class Shop(openingDay: List[DayOfWeek], openingHours: (LocalTime, LocalTime)) {
 
-  def isOpen(date: ZonedDateTime): Boolean = openingDay contains date.getDayOfWeek
+  def isOpenOn(date: ZonedDateTime): Boolean = openingDay contains date.getDayOfWeek
 }
