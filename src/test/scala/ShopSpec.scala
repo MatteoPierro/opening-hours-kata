@@ -17,6 +17,13 @@ class ShopSpec extends FlatSpec with Matchers {
 
     shop isOpenOn wednesday shouldBe true
   }
+
+  it should "be closed in an closing day" in {
+    val shop = new Shop(openingDay, openingHours)
+    val thursday = "2016-05-12T12:22:11.824Z"
+
+    shop isOpenOn thursday shouldBe false
+  }
 }
 
 class Shop(openingDay: List[DayOfWeek], openingHours: (LocalTime, LocalTime)) {
