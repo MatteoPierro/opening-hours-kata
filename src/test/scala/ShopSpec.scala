@@ -9,31 +9,31 @@ class ShopSpec extends FlatSpec with Matchers {
 
   val openingDay = List(MONDAY, WEDNESDAY, FRIDAY)
 
-  val openingHours = (LocalTime.of(8, 0), LocalTime.of(16, 0))
+  val openingTime = (LocalTime.of(8, 0), LocalTime.of(16, 0))
 
   it should "be open in an opening day" in {
-    val shop = new Shop(openingDay, openingHours)
+    val shop = new Shop(openingDay, openingTime)
     val wednesday = "2016-05-11T12:22:11.824Z"
 
     shop isOpenOn wednesday shouldBe true
   }
 
   it should "be closed in an closing day" in {
-    val shop = new Shop(openingDay, openingHours)
+    val shop = new Shop(openingDay, openingTime)
     val thursday = "2016-05-12T12:22:11.824Z"
 
     shop isOpenOn thursday shouldBe false
   }
 
   it should "be closed in an closing hour" in {
-    val shop = new Shop(openingDay, openingHours)
+    val shop = new Shop(openingDay, openingTime)
     val wednesdayBeforeOpeningHour = "2016-05-11T07:22:11.824Z"
 
     shop isOpenOn wednesdayBeforeOpeningHour shouldBe false
   }
 }
 
-class Shop(openingDay: List[DayOfWeek], openingHours: (LocalTime, LocalTime)) {
+class Shop(openingDay: List[DayOfWeek], openingTime: (LocalTime, LocalTime)) {
 
   def isOpenOn(date: ZonedDateTime): Boolean = isAnOpeningDay(date) && isAnOpeningHour(date)
 
@@ -41,6 +41,6 @@ class Shop(openingDay: List[DayOfWeek], openingHours: (LocalTime, LocalTime)) {
 
 
   def isAnOpeningHour(date: ZonedDateTime): Boolean = {
-    date.toLocalTime.isAfter(openingHours._1) && date.toLocalTime.isBefore(openingHours._2)
+    date.toLocalTime.isAfter(openingTime._1) && date.toLocalTime.isBefore(openingTime._2)
   }
 }
