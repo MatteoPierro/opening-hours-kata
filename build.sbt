@@ -14,4 +14,3 @@ libraryDependencies ++= Seq(
 scalacOptions ++= Seq("-feature", "-language:implicitConversions")
 
 initialCommands := "import com.matteopierro.openinghourskata._"
-

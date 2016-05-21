@@ -1,3 +1,13 @@
+
+## Requirements
+- java 8
+- sbt 0.13.9
+
+## Run test
+```
+sbt test
+```
+
 # opening-hours-kata
 
 Amy and Valerie, the shop owners, need you to develop a simple program that satisfies the following requirements:
