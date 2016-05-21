@@ -1,4 +1,5 @@
 import java.time.DayOfWeek._
+import java.time.format.DateTimeFormatter
 import java.time.{DayOfWeek, LocalTime, ZonedDateTime}
 
 import org.scalatest.{FlatSpec, Matchers}
@@ -11,36 +12,50 @@ class ShopSpec extends FlatSpec with Matchers {
 
   val openingHours = (LocalTime.of(8, 0), LocalTime.of(16, 0))
 
+  val shop = new Shop(openingDays, openingHours)
+
   "Shop" should "be open in an opening day" in {
-    val shop = new Shop(openingDays, openingHours)
     val wednesday = "2016-05-11T12:22:11.824Z"
 
     shop isOpenOn wednesday shouldBe true
   }
 
   it should "be closed in an closing day" in {
-    val shop = new Shop(openingDays, openingHours)
     val thursday = "2016-05-12T12:22:11.824Z"
 
     shop isOpenOn thursday shouldBe false
   }
 
   it should "be closed in an closing hour" in {
-    val shop = new Shop(openingDays, openingHours)
     val wednesdayBeforeOpeningHour = "2016-05-11T07:22:11.824Z"
 
     shop isOpenOn wednesdayBeforeOpeningHour shouldBe false
   }
 
   it should "be open at opening hour" in {
-    val shop = new Shop(openingDays, openingHours)
-    val wednesday = "2016-05-11T08:00:00Z"
+    val wednesdayAtOpeningHour = "2016-05-11T08:00:00Z"
 
-    shop isOpenOn wednesday shouldBe true
+    shop isOpenOn wednesdayAtOpeningHour shouldBe true
+  }
+
+  it should "have a next opening date" in {
+    val wednesday: ZonedDateTime = "2016-05-11T12:22:11.824Z"
+    val fridayMorning: ZonedDateTime = "2016-05-13T08:00:00.000Z"
+
+    shop nextOpeningDate wednesday shouldBe fridayMorning
   }
 }
 
 class Shop(openingDays: List[DayOfWeek], openingHours: (LocalTime, LocalTime)) {
+  def nextOpeningDate(date: ZonedDateTime): ZonedDateTime = {
+    if(openingDays.contains(date.getDayOfWeek) && !date.toLocalTime.isAfter(openingHours._1)) {
+      ZonedDateTime.of(date.toLocalDate, openingHours._1, date.getZone)
+    }
+    else{
+      val nextDate = date.plusDays(1)
+      nextOpeningDate(ZonedDateTime.of(nextDate.toLocalDate, openingHours._1, nextDate.getZone))
+    }
+  }
 
   def isOpenOn(date: ZonedDateTime): Boolean = isAnOpeningDay(date) && isAnOpeningHour(date.toLocalTime)
 
