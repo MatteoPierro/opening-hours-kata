@@ -3,10 +3,10 @@ import java.time.{DayOfWeek, LocalTime, ZonedDateTime}
 class Shop(openingDays: List[DayOfWeek], openingHours: (LocalTime, LocalTime)) {
 
   def nextOpeningDate(date: ZonedDateTime): ZonedDateTime = {
-    if (isAnOpeningDay(date) && isNotAfterOpeningHour(date.toLocalTime)) {
+    if (isAnOpeningDay(date) && isUpToOpeningHour(date.toLocalTime)) {
       return ZonedDateTime.of(date.toLocalDate, openingHours._1, date.getZone)
     }
-    
+
     val nextDay = date.plusDays(1)
     nextOpeningDate(ZonedDateTime.of(nextDay.toLocalDate, openingHours._1, nextDay.getZone))
   }
@@ -17,5 +17,5 @@ class Shop(openingDays: List[DayOfWeek], openingHours: (LocalTime, LocalTime)) {
 
   private def isAnOpeningHour(hour: LocalTime): Boolean = !hour.isBefore(openingHours._1) && !hour.isAfter(openingHours._2)
 
-  private def isNotAfterOpeningHour(hour: LocalTime): Boolean = !hour.isAfter(openingHours._1)
+  private def isUpToOpeningHour(hour: LocalTime): Boolean = !hour.isAfter(openingHours._1)
 }
